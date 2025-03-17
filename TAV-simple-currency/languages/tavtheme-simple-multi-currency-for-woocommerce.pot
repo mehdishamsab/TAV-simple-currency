@@ -1,0 +1,187 @@
+# Copyright (C) 2023 TavTheme
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: TavTheme Simple Multi Currency for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tavtheme-simple-multi-currency-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-12-01T12:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: tavtheme-simple-multi-currency-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "TavTheme Simple Multi Currency for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://tavtheme.com/en/product/tav-simple-currency/"
+msgstr ""
+
+#. Description of the plugin
+msgid "A simple multi-currency plugin for WooCommerce that allows each product to have its own currency and shows prices in the user's local currency."
+msgstr ""
+
+#. Author of the plugin
+msgid "TavTheme"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://tavtheme.com"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1234
+msgid "Product Currency"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1235
+msgid "Select the currency for this product. This product can only be purchased in this currency."
+msgstr ""
+
+#: TAV_Simple_Currency.php:1245
+msgid "Base Price"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1246
+msgid "Enter the base price in the selected currency. This will be the actual price used for this product."
+msgstr ""
+
+#: TAV_Simple_Currency.php:1567
+msgid "This product is priced in %s (%s)."
+msgstr ""
+
+#: TAV_Simple_Currency.php:1577
+msgid "Based on your location (%s), we also show prices in %s (%s) for your convenience."
+msgstr ""
+
+#: TAV_Simple_Currency.php:1789
+msgid "Sorry, you cannot add products with different currencies to your cart. Your cart contains products in %s. Please complete your current order or empty your cart before adding this product in %s."
+msgstr ""
+
+#: TAV_Simple_Currency.php:1810
+msgid "US Dollars"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1811
+msgid "Euros"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1812
+msgid "British Pounds"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1813
+msgid "Australian Dollars"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1814
+msgid "Brazilian Real"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1815
+msgid "Canadian Dollars"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1816
+msgid "Chinese Yuan"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1817
+msgid "Czech Koruna"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1818
+msgid "Danish Krone"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1819
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1820
+msgid "Hungarian Forint"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1821
+msgid "Indian Rupee"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1822
+msgid "Indonesia Rupiah"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1823
+msgid "Israeli Shekel"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1824
+msgid "Japanese Yen"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1825
+msgid "Malaysian Ringgits"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1826
+msgid "Mexican Peso"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1827
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1828
+msgid "Norwegian Krone"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1829
+msgid "Philippine Pesos"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1830
+msgid "Polish Zloty"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1831
+msgid "Romanian Leu"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1832
+msgid "Singapore Dollar"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1833
+msgid "South African rand"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1834
+msgid "Swedish Krona"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1835
+msgid "Swiss Franc"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1836
+msgid "Taiwan New Dollars"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1837
+msgid "Thai Baht"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1838
+msgid "Turkish Lira"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1839
+msgid "Russian Ruble"
+msgstr ""
+
+#: TAV_Simple_Currency.php:1840
+msgid "Iranian Rial"
+msgstr "" 

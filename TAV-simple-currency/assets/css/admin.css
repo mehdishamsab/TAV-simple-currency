@@ -1,0 +1,72 @@
+/**
+ * TavTheme Simple Multi Currency for WooCommerce - Admin CSS
+ *
+ * @package TavTheme Simple Multi Currency
+ * @since 1.0.0
+ */
+
+/* Product Currency Fields */
+._product_currency_field,
+._base_price_field {
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-left: 3px solid #2271b1;
+    margin-bottom: 10px !important;
+}
+
+._product_currency_field label,
+._base_price_field label {
+    font-weight: bold !important;
+}
+
+._product_currency_field .description,
+._base_price_field .description {
+    color: #666;
+    font-style: italic;
+}
+
+/* Currency Preview */
+.currency-preview {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.currency-preview h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2271b1;
+}
+
+.currency-preview-item {
+    margin-bottom: 5px;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.currency-preview-item:last-child {
+    border-bottom: none;
+}
+
+/* Settings Page */
+.tav-currency-settings {
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+.tav-currency-settings h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tav-currency-settings .form-table th {
+    width: 250px;
+}
+
+.tav-currency-settings .submit {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+} 
