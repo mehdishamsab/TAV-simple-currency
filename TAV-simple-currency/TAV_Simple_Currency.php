@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: TavTheme Simple Multi Currency for WooCommerce
+ * Plugin Name: TavTheme Free Multi Currency for WooCommerce
  * Plugin URI: https://tavtheme.com/en/product/tav-simple-currency/
  * Description: A simple multi-currency plugin for WooCommerce that allows each product to have its own currency and shows prices in the user's local currency.
- * Version: 1.0.0
+ * Version: 1.5.0
  * Author: TavTheme
  * Author URI: https://tavtheme.com/
- * Text Domain: tavtheme-simple-multi-currency-for-woocommerce
+ * Text Domain: tavtheme-free-multi-currency-for-woocommerce
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.2
@@ -32,7 +32,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('TAV_SIMPLE_CURRENCY_VERSION', '1.0.0');
+define('TAV_SIMPLE_CURRENCY_VERSION', '1.5.0');
 define('TAV_SIMPLE_CURRENCY_FILE', __FILE__);
 define('TAV_SIMPLE_CURRENCY_PATH', plugin_dir_path(__FILE__));
 define('TAV_SIMPLE_CURRENCY_URL', plugin_dir_url(__FILE__));
@@ -49,8 +49,6 @@ class TAV_Simple_Currency {
     }
 
     private function __construct() {
-        add_action('plugins_loaded', array($this, 'init'));
-        
         // Force currency to be applied early
         add_action('wp', array($this, 'force_apply_currency'));
         
@@ -59,102 +57,67 @@ class TAV_Simple_Currency {
         
         // Load text domain for translations
         add_action('plugins_loaded', array($this, 'load_textdomain'));
-    }
-
-    /**
-     * Load plugin text domain for translations
-     */
-    public function load_textdomain() {
-        load_plugin_textdomain(
-            'tavtheme-simple-multi-currency-for-woocommerce',
-            false,
-            dirname(plugin_basename(TAV_SIMPLE_CURRENCY_FILE)) . '/languages'
-        );
-    }
-
-    public function init() {
-        if (!class_exists('WooCommerce')) {
-            add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
-            return;
-        }
-
-        // Initialize session if not started
-        if (!session_id()) {
-            session_start();
-        }
         
-        // Set EUR as the base currency - IMPORTANT: This is the main setting
-        $base_currency = 'EUR';
+        // Initialize after WooCommerce 
+        add_action('plugins_loaded', array($this, 'init'));
         
-        // Override WooCommerce default currency to always use EUR as base
-        update_option('woocommerce_currency', $base_currency);
+        // Fix order item display in admin and emails
+        add_action('woocommerce_order_item_add_line_buttons', array($this, 'add_fix_order_items_button'), 10, 1);
+        add_action('admin_footer', array($this, 'add_order_items_fix_script'));
         
-        // Get current currency from session if set
-        if (isset($_SESSION['tav_currency'])) {
-            $this->current_currency = $_SESSION['tav_currency'];
-        } elseif (function_exists('WC') && WC()->session && WC()->session->get('chosen_currency')) {
-            // Try to get from WooCommerce session as fallback
-            $this->current_currency = WC()->session->get('chosen_currency');
-            $_SESSION['tav_currency'] = $this->current_currency;
-        } elseif (is_product()) {
-            // If we're on a product page, use that product's currency
-            global $post;
-            $product_id = $post->ID;
-            $product_currency = get_post_meta($product_id, '_product_currency', true);
-            
-            if ($product_currency) {
-                $this->current_currency = $product_currency;
-                $_SESSION['tav_currency'] = $product_currency;
-                if (function_exists('WC') && WC()->session) {
-                    WC()->session->set('chosen_currency', $product_currency);
-                }
-            }
-        }
+        // Add currency settings check
+        add_action('init', array($this, 'check_currency_settings'), 5);
         
-        // If still no currency, use the base currency (EUR)
-        if (!$this->current_currency) {
-            $this->current_currency = $base_currency;
-            $_SESSION['tav_currency'] = $base_currency;
-            if (function_exists('WC') && WC()->session) {
-                WC()->session->set('chosen_currency', $base_currency);
-            }
-        }
-        
-        // Debug log
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log("Initialized with currency: " . $this->current_currency . " (Base currency: " . $base_currency . ")");
-        }
-
-        // Add product fields
-        add_action('woocommerce_product_options_pricing', array($this, 'add_currency_fields'));
-        add_action('woocommerce_process_product_meta', array($this, 'save_currency_fields'));
-
-        // Remove currency switcher since each product will use its own currency
-        // add_action('wp_footer', array($this, 'add_currency_switcher'));
+        // Add scripts and styles
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-
-        // Handle currency switching
-        add_action('wp_ajax_tav_switch_currency', array($this, 'ajax_switch_currency'));
-        add_action('wp_ajax_nopriv_tav_switch_currency', array($this, 'ajax_switch_currency'));
-
-        // Override WooCommerce currency
-        add_filter('woocommerce_currency', array($this, 'change_woocommerce_currency'), 999);
-
-        // Modify prices
+        add_action('wp_footer', array($this, 'add_cart_currency_fix_script'));
+        
+        // Add currency switcher shortcode
+        add_shortcode('currency_switcher', array($this, 'add_currency_switcher'));
+        
+        // AJAX handlers for currency switching
+        add_action('wp_ajax_switch_currency', array($this, 'ajax_switch_currency'));
+        add_action('wp_ajax_nopriv_switch_currency', array($this, 'ajax_switch_currency'));
+        
+        // AJAX handler for stopping refresh
+        add_action('wp_ajax_stop_refresh', array($this, 'ajax_stop_refresh'));
+        add_action('wp_ajax_nopriv_stop_refresh', array($this, 'ajax_stop_refresh'));
+        
+        // AJAX handlers for geolocation
+        add_action('wp_ajax_get_user_currency', array($this, 'ajax_get_user_currency'));
+        add_action('wp_ajax_nopriv_get_user_currency', array($this, 'ajax_get_user_currency'));
+        
+        // Filter WooCommerce currency
+        add_filter('woocommerce_currency', array($this, 'change_woocommerce_currency'), 10, 1);
+        
+        // Add product currency fields
+        add_action('woocommerce_product_options_pricing', array($this, 'add_currency_fields'));
+        add_action('woocommerce_process_product_meta', array($this, 'save_currency_fields'), 10, 1);
+        
+        // Filter prices
         add_filter('woocommerce_product_get_price', array($this, 'modify_price'), 10, 2);
         add_filter('woocommerce_product_get_regular_price', array($this, 'modify_price'), 10, 2);
         add_filter('woocommerce_product_get_sale_price', array($this, 'modify_price'), 10, 2);
-        add_filter('woocommerce_get_price_html', array($this, 'modify_price_html'), 10, 2);
+        add_filter('woocommerce_get_variation_price', array($this, 'modify_variation_price'), 10, 4);
+        add_filter('woocommerce_variation_prices', array($this, 'modify_variation_prices'), 10, 3);
         
-        // Modify cart item prices
+        // Filter price HTML
+        add_filter('woocommerce_get_price_html', array($this, 'modify_price_html'), 10, 2);
+        add_filter('woocommerce_price_html', array($this, 'ensure_price_html_currency'), 100, 2);
+        
+        // Filter cart item price display
         add_filter('woocommerce_cart_item_price', array($this, 'modify_cart_item_price'), 10, 3);
         add_filter('woocommerce_cart_item_subtotal', array($this, 'modify_cart_item_subtotal'), 10, 3);
         
-        // Add currency info to order
+        // Update order currency
         add_action('woocommerce_checkout_create_order', array($this, 'add_currency_to_order'), 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', array($this, 'display_order_currency'), 10, 1);
         
-        // Additional hooks to ensure currency is applied everywhere
+        // Fix order item display in admin
+        add_action('woocommerce_admin_order_item_headers', array($this, 'fix_admin_order_items'), 10, 1);
+        add_action('woocommerce_admin_order_item_values', array($this, 'fix_admin_order_item_values'), 10, 3);
+        
+        // Filter cart totals
         add_filter('woocommerce_calculated_total', array($this, 'modify_cart_total'), 10, 2);
         add_filter('woocommerce_cart_totals_order_total_html', array($this, 'modify_cart_total_html'), 10, 1);
         add_filter('woocommerce_get_variation_price', array($this, 'modify_variation_price'), 10, 4);
@@ -187,7 +150,6 @@ class TAV_Simple_Currency {
         
         // Override cart total rows
         add_filter('woocommerce_cart_total', array($this, 'modify_cart_total_display'), 10, 1);
-        add_action('wp_footer', array($this, 'add_cart_currency_fix_script'));
         
         // Fix admin product page currency labels
         add_filter('woocommerce_currency_symbol', array($this, 'modify_currency_symbol'), 10, 2);
@@ -654,9 +616,20 @@ class TAV_Simple_Currency {
                 $converted_price = $this->convert_price($base_price, $base_currency, $this->current_currency);
                 $item->add_meta_data('_converted_price', $converted_price);
                 
-                // Update the item price to the converted price
-                $item->set_subtotal($converted_price);
-                $item->set_total($converted_price);
+                // Get the quantity
+                $quantity = $item->get_quantity();
+                
+                // Update the item price to the converted price per unit (not total)
+                $item->set_subtotal($converted_price * $quantity);
+                $item->set_total($converted_price * $quantity);
+                
+                // Store per-unit price for reference
+                $item->add_meta_data('_unit_price', $converted_price);
+                
+                // Debug log
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log("Order item updated: quantity={$quantity}, unit_price={$converted_price}, total=" . ($converted_price * $quantity));
+                }
             }
         }
         
@@ -830,6 +803,8 @@ class TAV_Simple_Currency {
         
         // Recalculate total based on converted prices
         $new_total = 0;
+        $items_subtotal = 0;
+        
         foreach ($cart->cart_contents as $cart_item_key => $cart_item) {
             $product_id = $cart_item['product_id'];
             $base_currency = get_post_meta($product_id, '_product_currency', true);
@@ -837,21 +812,36 @@ class TAV_Simple_Currency {
             
             if ($base_currency && $base_price) {
                 $converted_price = $this->convert_price($base_price, $base_currency, $this->current_currency);
-                $new_total += $converted_price * $cart_item['quantity'];
+                $line_total = $converted_price * $cart_item['quantity'];
+                $items_subtotal += $line_total;
             } else {
                 // If no custom currency/price, use the original price
-                $new_total += $cart_item['line_total'];
+                $items_subtotal += $cart_item['line_total'];
             }
         }
         
+        $new_total = $items_subtotal;
+        
         // Add shipping if applicable
-        if ($cart->shipping_total > 0) {
+        if (isset($cart->shipping_total) && $cart->shipping_total > 0) {
+            // Convert shipping if needed
             $new_total += $cart->shipping_total;
         }
         
         // Add taxes if applicable
-        if ($cart->tax_total > 0) {
+        if (isset($cart->tax_total) && $cart->tax_total > 0) {
             $new_total += $cart->tax_total;
+        }
+        
+        // Add fee total if applicable
+        if (isset($cart->fee_total) && $cart->fee_total > 0) {
+            $new_total += $cart->fee_total;
+        }
+        
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Cart total recalculated: $new_total");
+            error_log("Currency: " . $this->current_currency);
         }
         
         return $new_total;
@@ -959,10 +949,17 @@ class TAV_Simple_Currency {
             
             if ($base_currency && $base_price) {
                 $converted_price = $this->convert_price($base_price, $base_currency, $this->current_currency);
-                $subtotal += $converted_price * $cart_item['quantity'];
+                $line_subtotal = $converted_price * $cart_item['quantity'];
+                $subtotal += $line_subtotal;
             } else {
                 $subtotal += $cart_item['line_subtotal'];
             }
+        }
+        
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Cart subtotal recalculated: $subtotal");
+            error_log("Currency: " . $this->current_currency);
         }
         
         return $this->format_price($subtotal, $this->current_currency);
@@ -1074,18 +1071,79 @@ class TAV_Simple_Currency {
         // Get order currency
         $order_currency = $order->get_currency();
         
+        // Get order meta to ensure we're using the correct currency data
+        $order_meta_currency = $order->get_meta('_order_currency', true);
+        if (!empty($order_meta_currency)) {
+            $order_currency = $order_meta_currency;
+        }
+        
         // Replace currency symbols in the table
         $formats = $this->get_currency_formats();
+        
+        // Get the order currency format
+        $order_format = isset($formats[$order_currency]) ? $formats[$order_currency] : array('symbol' => $order_currency);
+        
+        // Replace all currency symbols with the order currency symbol
         foreach ($formats as $currency_code => $format) {
-            $symbol = $format['symbol'];
             if ($currency_code === $order_currency) {
-                // Keep the correct currency symbol
-                continue;
+                continue; // Skip the correct currency
             }
             
-            // Replace other currency symbols with the order currency symbol
-            $order_format = isset($formats[$order_currency]) ? $formats[$order_currency] : array('symbol' => $order_currency);
-            $order_items_table = str_replace($symbol, $order_format['symbol'], $order_items_table);
+            $symbol = $format['symbol'];
+            // Use preg_replace to ensure all instances are replaced
+            $order_items_table = preg_replace('/'. preg_quote($symbol, '/') .'/', $order_format['symbol'], $order_items_table);
+        }
+        
+        // Fix incorrect price calculation by parsing the HTML
+        $dom = new DOMDocument();
+        @$dom->loadHTML(mb_convert_encoding($order_items_table, 'HTML-ENTITIES', 'UTF-8'));
+        $xpath = new DOMXPath($dom);
+        $rows = $xpath->query('//tr');
+        
+        if ($rows && $rows->length > 0) {
+            foreach ($rows as $row) {
+                // Check if this is a product row with quantity and price
+                $qty_cell = $xpath->query('.//td[@class="td" and contains(@style, "text-align:left")]', $row)->item(0);
+                $price_cell = $xpath->query('.//td[@class="td" and contains(@style, "text-align:right")]', $row)->item(1);
+                
+                if ($qty_cell && $price_cell) {
+                    $qty_text = trim($qty_cell->textContent);
+                    $price_text = trim($price_cell->textContent);
+                    
+                    // Check if the quantity is numeric 
+                    if (is_numeric($qty_text) && $qty_text > 1) {
+                        // Extract the price value without currency symbol
+                        $price_value = preg_replace('/[^0-9.,]/', '', $price_text);
+                        $price_value = str_replace(',', '.', $price_value);
+                        
+                        if (is_numeric($price_value)) {
+                            // Calculate the correct line total
+                            $line_total = $price_value * $qty_text;
+                            
+                            // Format the corrected line total
+                            $formatted_total = $this->format_price($line_total, $order_currency);
+                            
+                            // Update the price cell with the correct total
+                            $price_cell->nodeValue = '';
+                            $price_cell->appendChild($dom->createTextNode($formatted_total));
+                        }
+                    }
+                }
+            }
+            
+            // Get only the body content to avoid duplicate DOCTYPE and HTML tags
+            $body = $dom->getElementsByTagName('body')->item(0);
+            if ($body) {
+                $order_items_table = '';
+                foreach ($body->childNodes as $child) {
+                    $order_items_table .= $dom->saveHTML($child);
+                }
+            }
+        }
+        
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Modified email order items using currency: " . $order_currency);
         }
         
         return $order_items_table;
@@ -1093,12 +1151,24 @@ class TAV_Simple_Currency {
     
     public function ensure_checkout_currency() {
         // Make sure the checkout form uses the correct currency
-        echo '<script type="text/javascript">
-            jQuery(document).ready(function($) {
-                // Update currency in checkout
-                $(document.body).trigger("update_checkout");
-            });
-        </script>';
+        if (function_exists('WC') && WC()->session) {
+            WC()->session->set('chosen_currency', $this->current_currency);
+            
+            // Add a script to ensure currency is updated on page load
+            if (!is_admin()) {
+                echo '<script type="text/javascript">
+                    jQuery(document).ready(function($) {
+                        // Update currency in checkout
+                        $(document.body).trigger("update_checkout");
+                        
+                        // Log that we are updating currency
+                        if (window.console && console.log) {
+                            console.log("Updating checkout with currency: ' . esc_js($this->current_currency) . '");
+                        }
+                    });
+                </script>';
+            }
+        }
     }
     
     public function update_checkout_on_currency_change($post_data) {
@@ -1115,10 +1185,23 @@ class TAV_Simple_Currency {
         $total = $order->get_total();
         $currency = $order->get_currency();
         
-        if ($currency !== $this->current_currency) {
-            // Convert the total to current currency
-            $total = $this->convert_price($total, $currency, $this->current_currency);
-            return $this->format_price($total, $this->current_currency);
+        // Get order meta to ensure we're using the correct currency data
+        $order_meta_currency = $order->get_meta('_order_currency', true);
+        if (!empty($order_meta_currency)) {
+            $currency = $order_meta_currency;
+        }
+        
+        // Always format the total in the order's currency
+        if ($currency) {
+            $formatted = $this->format_price($total, $currency);
+            
+            // Debug log
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("Formatted order total: " . $formatted);
+                error_log("Order currency: " . $currency);
+            }
+            
+            return $formatted;
         }
         
         return $formatted_total;
@@ -2262,30 +2345,14 @@ class TAV_Simple_Currency {
     private function clear_currency_cache_settings() {
         global $wpdb;
         
-        // Clear specific options that might be storing DKK as currency
-        $options_to_check = array(
-            'woocommerce_currency',
-            'woocommerce_default_currency',
-            'woocommerce_currency_pos',
-            'woocommerce_price_thousand_sep',
-            'woocommerce_price_decimal_sep',
-            'woocommerce_price_num_decimals'
-        );
-        
-        foreach ($options_to_check as $option_name) {
-            $option_value = get_option($option_name);
-            if ($option_name === 'woocommerce_currency' && $option_value !== 'EUR') {
-                update_option($option_name, 'EUR');
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log("Fixed option {$option_name}: changed from {$option_value} to EUR");
-                }
-            }
+        // Clear WooCommerce cache
+        if (function_exists('wc_cache_helper_get_transient_version')) {
+            wc_delete_shop_order_transients();
+            wc_delete_product_transients();
+            
+            delete_transient('wc_products_onsale');
+            WC_Cache_Helper::get_transient_version('product', true);
         }
-        
-        // Clear any transients related to currency
-        $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%_transient%currency%'");
-        $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%_transient%exchange%'");
-        $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%_transient%rate%'");
         
         // Clear WooCommerce sessions that might have currency info
         $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%_wc_session_%'");
@@ -2296,6 +2363,353 @@ class TAV_Simple_Currency {
         // Debug log
         if (defined('WP_DEBUG') && WP_DEBUG) {
             error_log("Cleared all currency cache settings");
+        }
+    }
+
+    /**
+     * Ensure email prices use the correct currency format
+     */
+    public function ensure_email_price_currency($price_html, $order) {
+        // Get the order currency
+        $order_currency = $order->get_currency();
+        
+        // Get order meta to ensure we're using the correct currency data
+        $order_meta_currency = $order->get_meta('_order_currency', true);
+        if (!empty($order_meta_currency)) {
+            $order_currency = $order_meta_currency;
+        }
+        
+        // Get currency format
+        $formats = $this->get_currency_formats();
+        $format = isset($formats[$order_currency]) ? $formats[$order_currency] : array('symbol' => $order_currency);
+        
+        // Replace currency symbols as needed to ensure consistency
+        foreach ($formats as $currency_code => $curr_format) {
+            if ($currency_code === $order_currency) {
+                continue;
+            }
+            
+            $symbol = $curr_format['symbol'];
+            $price_html = preg_replace('/'. preg_quote($symbol, '/') .'/', $format['symbol'], $price_html);
+        }
+        
+        return $price_html;
+    }
+    
+    /**
+     * Ensure email order details table uses correct currency
+     */
+    public function ensure_email_order_table_currency($order_details, $order, $sent_to_admin, $plain_text) {
+        if ($plain_text) {
+            return $order_details; // Skip for plain text emails
+        }
+        
+        // Get the order currency
+        $order_currency = $order->get_currency();
+        
+        // Get order meta to ensure we're using the correct currency data
+        $order_meta_currency = $order->get_meta('_order_currency', true);
+        if (!empty($order_meta_currency)) {
+            $order_currency = $order_meta_currency;
+        }
+        
+        // Get currency format
+        $formats = $this->get_currency_formats();
+        $format = isset($formats[$order_currency]) ? $formats[$order_currency] : array('symbol' => $order_currency);
+        $symbol = $format['symbol'];
+        
+        // Ensure all price cells show the correct currency symbol
+        $dom = new DOMDocument();
+        @$dom->loadHTML(mb_convert_encoding($order_details, 'HTML-ENTITIES', 'UTF-8'));
+        $xpath = new DOMXPath($dom);
+        
+        // Find price cells in the table (typically have class 'woocommerce-Price-amount amount')
+        $price_nodes = $xpath->query("//span[contains(@class, 'woocommerce-Price-amount')]");
+        
+        if ($price_nodes && $price_nodes->length > 0) {
+            foreach ($price_nodes as $node) {
+                $currency_span = $xpath->query(".//span[contains(@class, 'woocommerce-Price-currencySymbol')]", $node)->item(0);
+                
+                if ($currency_span) {
+                    $currency_span->nodeValue = $symbol;
+                }
+            }
+            
+            // Get only the body content to avoid duplicate DOCTYPE and HTML tags
+            $body = $dom->getElementsByTagName('body')->item(0);
+            if ($body) {
+                $order_details = '';
+                foreach ($body->childNodes as $child) {
+                    $order_details .= $dom->saveHTML($child);
+                }
+            }
+        }
+        
+        return $order_details;
+    }
+
+    public function fix_admin_order_items($order) {
+        // Add a custom column for product currency
+        add_filter('manage_edit-shop_order_columns', function($columns) {
+            $columns['product_currency'] = __('Product Currency', 'tavtheme-simple-multi-currency-for-woocommerce');
+            return $columns;
+        });
+
+        // Add content to the custom column
+        add_action('manage_shop_order_posts_custom_column', function($column, $post_id) {
+            if ($column === 'product_currency') {
+                $order = wc_get_order($post_id);
+                $currency = $order->get_meta('_order_currency');
+                echo esc_html($currency);
+            }
+        }, 10, 2);
+    }
+
+    public function fix_admin_order_item_values($item, $item_id, $order) {
+        // Add a custom field for product currency
+        $item->add_meta_data('_product_currency', $order->get_meta('_order_currency'));
+    }
+
+    /**
+     * Load plugin text domain for translations
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain(
+            'tavtheme-simple-multi-currency-for-woocommerce',
+            false,
+            dirname(plugin_basename(TAV_SIMPLE_CURRENCY_FILE)) . '/languages'
+        );
+    }
+
+    public function init() {
+        if (!class_exists('WooCommerce')) {
+            add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
+            return;
+        }
+
+        // Initialize session if not started
+        if (!session_id()) {
+            session_start();
+        }
+        
+        // Set EUR as the base currency - IMPORTANT: This is the main setting
+        $base_currency = 'EUR';
+        
+        // Override WooCommerce default currency to always use EUR as base
+        update_option('woocommerce_currency', $base_currency);
+        
+        // Get current currency from session if set
+        if (isset($_SESSION['tav_currency'])) {
+            $this->current_currency = $_SESSION['tav_currency'];
+        } elseif (function_exists('WC') && WC()->session && WC()->session->get('chosen_currency')) {
+            // Try to get from WooCommerce session as fallback
+            $this->current_currency = WC()->session->get('chosen_currency');
+            $_SESSION['tav_currency'] = $this->current_currency;
+        } elseif (is_product()) {
+            // If we're on a product page, use that product's currency
+            global $post;
+            $product_id = $post->ID;
+            $product_currency = get_post_meta($product_id, '_product_currency', true);
+            
+            if ($product_currency) {
+                $this->current_currency = $product_currency;
+                $_SESSION['tav_currency'] = $product_currency;
+                if (function_exists('WC') && WC()->session) {
+                    WC()->session->set('chosen_currency', $product_currency);
+                }
+            }
+        }
+        
+        // If still no currency, use the base currency (EUR)
+        if (!$this->current_currency) {
+            $this->current_currency = $base_currency;
+            $_SESSION['tav_currency'] = $base_currency;
+            if (function_exists('WC') && WC()->session) {
+                WC()->session->set('chosen_currency', $base_currency);
+            }
+        }
+        
+        // Add additional filters for email currency formatting
+        add_filter('woocommerce_email_format_price', array($this, 'ensure_email_price_currency'), 10, 2);
+        add_filter('woocommerce_email_order_details_table', array($this, 'ensure_email_order_table_currency'), 10, 4);
+        
+        // Fix email order item line totals
+        add_filter('woocommerce_order_formatted_line_subtotal', array($this, 'fix_line_subtotal'), 10, 3);
+        
+        // Fix order item price in emails
+        add_filter('woocommerce_order_item_get_formatted_meta_data', array($this, 'fix_order_item_meta'), 10, 2);
+        
+        // Fix order total calculations in emails
+        add_action('woocommerce_email_before_order_table', array($this, 'maybe_fix_email_order_totals'), 10, 4);
+        
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Initialized with currency: " . $this->current_currency . " (Base currency: " . $base_currency . ")");
+        }
+        
+        // Fix order item display in admin and emails
+        add_action('woocommerce_order_item_add_line_buttons', array($this, 'add_fix_order_items_button'), 10, 1);
+        add_action('admin_footer', array($this, 'add_order_items_fix_script'));
+    }
+    
+    /**
+     * Fix line subtotal calculation for order items
+     */
+    public function fix_line_subtotal($subtotal, $item, $order) {
+        // Get the base per-unit price
+        $unit_price = $item->get_meta('_unit_price');
+        
+        // If no unit price stored, try to calculate it
+        if (empty($unit_price) || !is_numeric($unit_price)) {
+            $unit_price = $item->get_total() / $item->get_quantity();
+        }
+        
+        // Calculate the correct line total
+        $line_total = $unit_price * $item->get_quantity();
+        
+        // Format the amount
+        $currency = $order->get_currency();
+        $formatted = $this->format_price($line_total, $currency);
+        
+        // Debug
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Fixed line subtotal: original={$subtotal}, new={$formatted}, qty={$item->get_quantity()}, unit={$unit_price}");
+        }
+        
+        return $formatted;
+    }
+    
+    /**
+     * Add a button to fix order item totals in admin
+     */
+    public function add_fix_order_items_button($order) {
+        // Only if there are items
+        if (count($order->get_items()) > 0) {
+            echo '<button type="button" class="button fix-order-item-totals">';
+            echo __('Fix Item Totals', 'tavtheme-simple-multi-currency-for-woocommerce');
+            echo '</button>';
+        }
+    }
+    
+    /**
+     * Add JavaScript to automatically fix order item calculations in admin
+     */
+    public function add_order_items_fix_script() {
+        if (!is_admin()) {
+            return;
+        }
+        
+        $screen = get_current_screen();
+        if (!$screen || $screen->id !== 'shop_order') {
+            return;
+        }
+        
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                // Function to fix order item totals
+                function fixOrderItemTotals() {
+                    $('.woocommerce_order_item').each(function() {
+                        var $row = $(this);
+                        var qty = parseFloat($row.find('input.quantity').val()) || 1;
+                        var unitPrice = parseFloat($row.find('.line_cost').data('unit-price')) || 0;
+                        
+                        if (qty > 1 && unitPrice > 0) {
+                            // Calculate correct line total
+                            var lineTotal = qty * unitPrice;
+                            
+                            // Update line total
+                            $row.find('input.line_total').val(lineTotal.toFixed(2));
+                            $row.find('.line_cost .woocommerce-Price-amount').text(
+                                formatMoney(lineTotal)
+                            );
+                            
+                            console.log('Fixed line total: qty=' + qty + ', unit=' + unitPrice + ', total=' + lineTotal);
+                        }
+                    });
+                }
+                
+                // Helper to format money
+                function formatMoney(amount) {
+                    return amount.toFixed(2);
+                }
+                
+                // Fix totals on page load
+                setTimeout(fixOrderItemTotals, 1000);
+                
+                // Fix totals when button is clicked
+                $('.fix-order-item-totals').on('click', function(e) {
+                    e.preventDefault();
+                    fixOrderItemTotals();
+                    alert('Order item totals have been fixed!');
+                });
+                
+                // Also fix when quantity changes
+                $('body').on('change', 'input.quantity', function() {
+                    setTimeout(fixOrderItemTotals, 100);
+                });
+            });
+        </script>
+        <?php
+    }
+    
+    /**
+     * Fix order item meta data to ensure correct unit price display
+     */
+    public function fix_order_item_meta($formatted_meta, $item) {
+        // Store unit price as meta if we have quantity > 1
+        if ($item->get_quantity() > 1) {
+            $unit_price = $item->get_total() / $item->get_quantity();
+            $item->update_meta_data('_unit_price_display', $unit_price);
+        }
+        
+        return $formatted_meta;
+    }
+    
+    /**
+     * Fix order totals in emails before they're sent
+     */
+    public function maybe_fix_email_order_totals($order, $sent_to_admin, $plain_text, $email) {
+        // Check if this is an order email
+        if (!$order || !is_a($order, 'WC_Order')) {
+            return;
+        }
+        
+        // Add a script to fix the totals on email viewing
+        if (!$plain_text) {
+            ?>
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Find all order items
+                    var rows = document.querySelectorAll('table.order_items tr');
+                    
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        var qtyCell = row.querySelector('td:first-child');
+                        var priceCell = row.querySelector('td:last-child');
+                        
+                        if (qtyCell && priceCell) {
+                            var qty = parseInt(qtyCell.textContent.trim());
+                            
+                            if (qty > 1) {
+                                // Try to extract price from the cell
+                                var priceText = priceCell.textContent.trim();
+                                var unitPrice = parseFloat(priceText.replace(/[^0-9.,]/g, '').replace(',', '.'));
+                                
+                                if (!isNaN(unitPrice) && unitPrice > 0) {
+                                    // Calculate line total
+                                    var lineTotal = unitPrice * qty;
+                                    
+                                    // Format price back with same symbols
+                                    var symbol = priceText.replace(/[\d.,]/g, '').trim();
+                                    priceCell.textContent = symbol + ' ' + lineTotal.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+            <?php
         }
     }
 }
