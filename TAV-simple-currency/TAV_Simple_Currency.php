@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: TavTheme Free Multi Currency for WooCommerce
+ * Plugin Name: TavTheme Simple Multi Currency Switcher
  * Plugin URI: https://tavtheme.com/en/product/tav-simple-currency/
  * Description: A simple multi-currency plugin for WooCommerce that allows each product to have its own currency and shows prices in the user's local currency.
  * Version: 1.5.0
  * Author: TavTheme
  * Author URI: https://tavtheme.com/
- * Text Domain: tavtheme-free-multi-currency-for-woocommerce
+ * Text Domain: tavtheme-simple-multi-currency-switcher
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.2
@@ -368,8 +368,8 @@ class TAV_Simple_Currency {
         woocommerce_wp_select(
             array(
                 'id' => '_product_currency',
-                'label' => __('Product Currency', 'tavtheme-free-multi-currency-for-woocommerce'),
-                'description' => __('Select the currency for this product. This product can only be purchased in this currency.', 'tavtheme-free-multi-currency-for-woocommerce'),
+                'label' => __('Product Currency', 'tavtheme-simple-multi-currency-switcher'),
+                'description' => __('Select the currency for this product. This product can only be purchased in this currency.', 'tavtheme-simple-multi-currency-switcher'),
                 'desc_tip' => true,
                 'options' => $this->get_currency_options(),
                 'value' => get_post_meta($post->ID, '_product_currency', true)
@@ -380,8 +380,8 @@ class TAV_Simple_Currency {
         woocommerce_wp_text_input(
             array(
                 'id' => '_base_price',
-                'label' => __('Base Price', 'tavtheme-free-multi-currency-for-woocommerce'),
-                'description' => __('Enter the base price in the selected currency. This will be the actual price used for this product.', 'tavtheme-free-multi-currency-for-woocommerce'),
+                'label' => __('Base Price', 'tavtheme-simple-multi-currency-switcher'),
+                'description' => __('Enter the base price in the selected currency. This will be the actual price used for this product.', 'tavtheme-simple-multi-currency-switcher'),
                 'desc_tip' => true,
                 'type' => 'text',
                 'data_type' => 'price',
@@ -785,7 +785,7 @@ class TAV_Simple_Currency {
     public function woocommerce_missing_notice() {
         ?>
         <div class="error">
-            <p><?php _e('TavTheme Simple Multi Currency requires WooCommerce to be installed and activated.', 'tavtheme-free-multi-currency-for-woocommerce'); ?></p>
+            <p><?php _e('TavTheme Simple Multi Currency Switcher requires WooCommerce to be installed and activated.', 'tavtheme-simple-multi-currency-switcher'); ?></p>
         </div>
         <?php
     }
@@ -2068,7 +2068,7 @@ class TAV_Simple_Currency {
                 // Show an error message
                 wc_add_notice(
                     sprintf(
-                        __('Sorry, you cannot add products with different currencies to your cart. Your cart contains products in %s. Please complete your current order or empty your cart before adding this product in %s.', 'tavtheme-free-multi-currency-for-woocommerce'),
+                        __('Sorry, you cannot add products with different currencies to your cart. Your cart contains products in %s. Please complete your current order or empty your cart before adding this product in %s.', 'tavtheme-simple-multi-currency-switcher'),
                         $this->get_currency_name($cart_item_currency),
                         $this->get_currency_name($product_currency)
                     ),
@@ -2490,7 +2490,7 @@ class TAV_Simple_Currency {
      */
     public function load_textdomain() {
         load_plugin_textdomain(
-            'tavtheme-free-multi-currency-for-woocommerce',
+            'tavtheme-simple-multi-currency-switcher',
             false,
             dirname(plugin_basename(TAV_SIMPLE_CURRENCY_FILE)) . '/languages'
         );

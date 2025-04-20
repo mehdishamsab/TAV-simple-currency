@@ -2,8 +2,8 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: TavTheme Free Multi Currency for WooCommerce 1.5.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tavtheme-free-multi-currency-for-woocommerce\n"
+"Project-Id-Version: TavTheme Simple Multi Currency Switcher 1.5.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tavtheme-simple-multi-currency-switcher\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,10 +12,10 @@ msgstr ""
 "POT-Creation-Date: 2023-12-01T12:00:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
-"X-Domain: tavtheme-free-multi-currency-for-woocommerce\n"
+"X-Domain: tavtheme-simple-multi-currency-switcher\n"
 
 #. Plugin Name of the plugin
-msgid "TavTheme Free Multi Currency for WooCommerce"
+msgid "TavTheme Simple Multi Currency Switcher"
 msgstr ""
 
 #. Plugin URI of the plugin

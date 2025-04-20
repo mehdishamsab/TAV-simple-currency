@@ -1,9 +1,9 @@
-=== TavTheme Free Multi Currency for WooCommerce ===
+=== TavTheme Simple Multi Currency Switcher ===
 Contributors: tavtheme
 Donate in PayPal: mehdishamsab@gmail.com  
 Tags: woocommerce, currency, multi-currency, exchange rate, ecommerce
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.2
 Stable tag: 1.5.0
 License: GPLv2 or later
@@ -13,7 +13,7 @@ A simple multi-currency plugin for WooCommerce that allows each product to have 
 
 == Description ==
 
-TavTheme Simple Multi Currency for WooCommerce is a lightweight and easy-to-use plugin that allows you to set different currencies for each product in your WooCommerce store. It also automatically detects the user's location and shows prices in their local currency for better user experience.
+TavTheme Simple Multi Currency Switcher is a lightweight and easy-to-use plugin that allows you to set different currencies for each product in your WooCommerce store. It also automatically detects the user's location and shows prices in their local currency for better user experience.
 
 = Key Features =
 

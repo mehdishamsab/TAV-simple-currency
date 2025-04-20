@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall TavTheme Simple Multi Currency for WooCommerce
+ * Uninstall TavTheme Simple Multi Currency Switcher
  *
  * @package TavTheme Simple Multi Currency
  * @since 1.0.0
