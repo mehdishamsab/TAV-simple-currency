@@ -368,8 +368,8 @@ class TAV_Simple_Currency {
         woocommerce_wp_select(
             array(
                 'id' => '_product_currency',
-                'label' => __('Product Currency', 'tavtheme-simple-multi-currency-for-woocommerce'),
-                'description' => __('Select the currency for this product. This product can only be purchased in this currency.', 'tavtheme-simple-multi-currency-for-woocommerce'),
+                'label' => __('Product Currency', 'tavtheme-free-multi-currency-for-woocommerce'),
+                'description' => __('Select the currency for this product. This product can only be purchased in this currency.', 'tavtheme-free-multi-currency-for-woocommerce'),
                 'desc_tip' => true,
                 'options' => $this->get_currency_options(),
                 'value' => get_post_meta($post->ID, '_product_currency', true)
@@ -380,8 +380,8 @@ class TAV_Simple_Currency {
         woocommerce_wp_text_input(
             array(
                 'id' => '_base_price',
-                'label' => __('Base Price', 'tavtheme-simple-multi-currency-for-woocommerce'),
-                'description' => __('Enter the base price in the selected currency. This will be the actual price used for this product.', 'tavtheme-simple-multi-currency-for-woocommerce'),
+                'label' => __('Base Price', 'tavtheme-free-multi-currency-for-woocommerce'),
+                'description' => __('Enter the base price in the selected currency. This will be the actual price used for this product.', 'tavtheme-free-multi-currency-for-woocommerce'),
                 'desc_tip' => true,
                 'type' => 'text',
                 'data_type' => 'price',
@@ -785,7 +785,7 @@ class TAV_Simple_Currency {
     public function woocommerce_missing_notice() {
         ?>
         <div class="error">
-            <p><?php _e('TavTheme Simple Multi Currency requires WooCommerce to be installed and activated.', 'tavtheme-simple-multi-currency-for-woocommerce'); ?></p>
+            <p><?php _e('TavTheme Simple Multi Currency requires WooCommerce to be installed and activated.', 'tavtheme-free-multi-currency-for-woocommerce'); ?></p>
         </div>
         <?php
     }
@@ -2068,7 +2068,7 @@ class TAV_Simple_Currency {
                 // Show an error message
                 wc_add_notice(
                     sprintf(
-                        __('Sorry, you cannot add products with different currencies to your cart. Your cart contains products in %s. Please complete your current order or empty your cart before adding this product in %s.', 'tavtheme-simple-multi-currency-for-woocommerce'),
+                        __('Sorry, you cannot add products with different currencies to your cart. Your cart contains products in %s. Please complete your current order or empty your cart before adding this product in %s.', 'tavtheme-free-multi-currency-for-woocommerce'),
                         $this->get_currency_name($cart_item_currency),
                         $this->get_currency_name($product_currency)
                     ),
@@ -2085,37 +2085,37 @@ class TAV_Simple_Currency {
     // Helper function to get currency name
     private function get_currency_name($currency_code) {
         $currencies = array(
-            'USD' => __('US Dollars', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'EUR' => __('Euros', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'GBP' => __('British Pounds', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'AUD' => __('Australian Dollars', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'BRL' => __('Brazilian Real', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CAD' => __('Canadian Dollars', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CNY' => __('Chinese Yuan', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CZK' => __('Czech Koruna', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'DKK' => __('Danish Krone', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'HKD' => __('Hong Kong Dollar', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'HUF' => __('Hungarian Forint', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'INR' => __('Indian Rupee', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'IDR' => __('Indonesia Rupiah', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'ILS' => __('Israeli Shekel', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'JPY' => __('Japanese Yen', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'MYR' => __('Malaysian Ringgits', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'MXN' => __('Mexican Peso', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'NZD' => __('New Zealand Dollar', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'NOK' => __('Norwegian Krone', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'PHP' => __('Philippine Pesos', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'PLN' => __('Polish Zloty', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'RON' => __('Romanian Leu', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'SGD' => __('Singapore Dollar', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'ZAR' => __('South African rand', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'SEK' => __('Swedish Krona', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CHF' => __('Swiss Franc', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'TWD' => __('Taiwan New Dollars', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'THB' => __('Thai Baht', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'TRY' => __('Turkish Lira', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'RUB' => __('Russian Ruble', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'IRR' => __('Iranian Rial', 'tavtheme-simple-multi-currency-for-woocommerce'),
+            'USD' => __('US Dollars', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'EUR' => __('Euros', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'GBP' => __('British Pounds', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'AUD' => __('Australian Dollars', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'BRL' => __('Brazilian Real', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'CAD' => __('Canadian Dollars', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'CNY' => __('Chinese Yuan', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'CZK' => __('Czech Koruna', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'DKK' => __('Danish Krone', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'HKD' => __('Hong Kong Dollar', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'HUF' => __('Hungarian Forint', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'INR' => __('Indian Rupee', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'IDR' => __('Indonesia Rupiah', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'ILS' => __('Israeli Shekel', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'JPY' => __('Japanese Yen', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'MYR' => __('Malaysian Ringgits', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'MXN' => __('Mexican Peso', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'NZD' => __('New Zealand Dollar', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'NOK' => __('Norwegian Krone', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'PHP' => __('Philippine Pesos', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'PLN' => __('Polish Zloty', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'RON' => __('Romanian Leu', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'SGD' => __('Singapore Dollar', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'ZAR' => __('South African rand', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'SEK' => __('Swedish Krona', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'CHF' => __('Swiss Franc', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'TWD' => __('Taiwan New Dollars', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'THB' => __('Thai Baht', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'TRY' => __('Turkish Lira', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'RUB' => __('Russian Ruble', 'tavtheme-free-multi-currency-for-woocommerce'),
+            'IRR' => __('Iranian Rial', 'tavtheme-free-multi-currency-for-woocommerce'),
         );
         
         return isset($currencies[$currency_code]) ? $currencies[$currency_code] : $currency_code;
@@ -2146,7 +2146,7 @@ class TAV_Simple_Currency {
         // If no user currency detected, try to detect it now
         if (!$user_currency) {
             $user_currency = $this->detect_user_currency();
-            
+        
             // If we have a user currency now, get the country from session
             if ($user_currency) {
                 $user_country = isset($_SESSION['tav_user_country']) ? $_SESSION['tav_user_country'] : '';
@@ -2162,7 +2162,7 @@ class TAV_Simple_Currency {
         
         // Basic notice about product currency
         echo sprintf(
-            __('This product is priced in %s (%s).', 'tavtheme-simple-multi-currency-for-woocommerce'),
+            __('This product is priced in %s (%s).', 'tavtheme-free-multi-currency-for-woocommerce'),
             '<strong>' . $this->get_currency_name($product_currency) . '</strong>',
             $currency_symbol
         );
@@ -2172,7 +2172,7 @@ class TAV_Simple_Currency {
             $user_currency_symbol = isset($currency_formats[$user_currency]['symbol']) ? $currency_formats[$user_currency]['symbol'] : $user_currency;
             
             echo '<br><br>' . sprintf(
-                __('Based on your location (%s), we also show prices in %s (%s) for your convenience.', 'tavtheme-simple-multi-currency-for-woocommerce'),
+                __('Based on your location (%s), we also show prices in %s (%s) for your convenience.', 'tavtheme-free-multi-currency-for-woocommerce'),
                 '<strong>' . $user_country . '</strong>',
                 '<strong>' . $this->get_currency_name($user_currency) . '</strong>',
                 $user_currency_symbol
@@ -2184,68 +2184,93 @@ class TAV_Simple_Currency {
 
     // Add this method to get currency options for the admin dropdown
     private function get_currency_options() {
-        return array(
-            // European Currencies
-            'EUR' => __('Euro (€)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'GBP' => __('British Pound (£)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CHF' => __('Swiss Franc (CHF)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'SEK' => __('Swedish Krona (kr)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'NOK' => __('Norwegian Krone (kr)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'DKK' => __('Danish Krone (kr)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'PLN' => __('Polish Złoty (zł)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CZK' => __('Czech Koruna (Kč)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'HUF' => __('Hungarian Forint (Ft)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'RON' => __('Romanian Leu (lei)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'BGN' => __('Bulgarian Lev (лв)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'HRK' => __('Croatian Kuna (kn)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'ISK' => __('Icelandic Króna (kr)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // American Currencies
-            'USD' => __('US Dollar ($)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CAD' => __('Canadian Dollar (C$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'MXN' => __('Mexican Peso (MX$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'BRL' => __('Brazilian Real (R$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'ARS' => __('Argentine Peso (AR$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CLP' => __('Chilean Peso (CLP$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'COP' => __('Colombian Peso (COL$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'PEN' => __('Peruvian Sol (S/.)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'UYU' => __('Uruguayan Peso ($U)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // Asian Currencies
-            'JPY' => __('Japanese Yen (¥)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'CNY' => __('Chinese Yuan (¥)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'INR' => __('Indian Rupee (₹)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'KRW' => __('South Korean Won (₩)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'SGD' => __('Singapore Dollar (S$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'HKD' => __('Hong Kong Dollar (HK$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'TWD' => __('Taiwan Dollar (NT$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'THB' => __('Thai Baht (฿)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'MYR' => __('Malaysian Ringgit (RM)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'IDR' => __('Indonesian Rupiah (Rp)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'PHP' => __('Philippine Peso (₱)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'VND' => __('Vietnamese Dong (₫)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // Middle Eastern Currencies
-            'ILS' => __('Israeli New Shekel (₪)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'AED' => __('UAE Dirham (د.إ)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'SAR' => __('Saudi Riyal (﷼)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'QAR' => __('Qatari Rial (﷼)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'IRR' => __('Iranian Rial (﷼)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'TRY' => __('Turkish Lira (₺)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // Oceania Currencies
-            'AUD' => __('Australian Dollar (A$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'NZD' => __('New Zealand Dollar (NZ$)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // African Currencies
-            'ZAR' => __('South African Rand (R)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'EGP' => __('Egyptian Pound (E£)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'NGN' => __('Nigerian Naira (₦)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            'KES' => __('Kenyan Shilling (KSh)', 'tavtheme-simple-multi-currency-for-woocommerce'),
-            
-            // Other Currencies
-            'RUB' => __('Russian Ruble (₽)', 'tavtheme-simple-multi-currency-for-woocommerce'),
+        // Europe
+        $currency_groups = array(
+            'europe' => array(
+                'label' => 'Europe',
+                'currencies' => array(
+                    'EUR' => __('Euro (€)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'GBP' => __('British Pound (£)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'CHF' => __('Swiss Franc (CHF)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'SEK' => __('Swedish Krona (kr)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'NOK' => __('Norwegian Krone (kr)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'DKK' => __('Danish Krone (kr)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'PLN' => __('Polish Złoty (zł)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'CZK' => __('Czech Koruna (Kč)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'HUF' => __('Hungarian Forint (Ft)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'RON' => __('Romanian Leu (lei)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'BGN' => __('Bulgarian Lev (лв)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'HRK' => __('Croatian Kuna (kn)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'ISK' => __('Icelandic Króna (kr)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'americas' => array(
+                'label' => 'Americas',
+                'currencies' => array(
+                    'USD' => __('US Dollar ($)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'CAD' => __('Canadian Dollar (C$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'MXN' => __('Mexican Peso (MX$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'BRL' => __('Brazilian Real (R$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'ARS' => __('Argentine Peso (AR$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'CLP' => __('Chilean Peso (CLP$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'COP' => __('Colombian Peso (COL$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'PEN' => __('Peruvian Sol (S/.)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'UYU' => __('Uruguayan Peso ($U)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'asia_pacific' => array(
+                'label' => 'Asia-Pacific',
+                'currencies' => array(
+                    'JPY' => __('Japanese Yen (¥)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'CNY' => __('Chinese Yuan (¥)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'INR' => __('Indian Rupee (₹)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'KRW' => __('South Korean Won (₩)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'SGD' => __('Singapore Dollar (S$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'HKD' => __('Hong Kong Dollar (HK$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'TWD' => __('Taiwan Dollar (NT$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'THB' => __('Thai Baht (฿)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'MYR' => __('Malaysian Ringgit (RM)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'IDR' => __('Indonesian Rupiah (Rp)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'PHP' => __('Philippine Peso (₱)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'VND' => __('Vietnamese Dong (₫)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'middle_east' => array(
+                'label' => 'Middle East',
+                'currencies' => array(
+                    'ILS' => __('Israeli New Shekel (₪)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'AED' => __('UAE Dirham (د.إ)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'SAR' => __('Saudi Riyal (﷼)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'QAR' => __('Qatari Rial (﷼)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'IRR' => __('Iranian Rial (﷼)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'TRY' => __('Turkish Lira (₺)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'oceania' => array(
+                'label' => 'Oceania',
+                'currencies' => array(
+                    'AUD' => __('Australian Dollar (A$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'NZD' => __('New Zealand Dollar (NZ$)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'africa' => array(
+                'label' => 'Africa',
+                'currencies' => array(
+                    'ZAR' => __('South African Rand (R)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'EGP' => __('Egyptian Pound (E£)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'NGN' => __('Nigerian Naira (₦)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                    'KES' => __('Kenyan Shilling (KSh)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
+            'russia' => array(
+                'label' => 'Russia & CIS',
+                'currencies' => array(
+                    'RUB' => __('Russian Ruble (₽)', 'tavtheme-free-multi-currency-for-woocommerce'),
+                ),
+            ),
         );
+        
+        return $currency_groups;
     }
 
     public function enqueue_geolocation_scripts() {
@@ -2449,20 +2474,10 @@ class TAV_Simple_Currency {
     }
 
     public function fix_admin_order_items($order) {
-        // Add a custom column for product currency
-        add_filter('manage_edit-shop_order_columns', function($columns) {
-            $columns['product_currency'] = __('Product Currency', 'tavtheme-simple-multi-currency-for-woocommerce');
-            return $columns;
-        });
-
-        // Add content to the custom column
-        add_action('manage_shop_order_posts_custom_column', function($column, $post_id) {
-            if ($column === 'product_currency') {
-                $order = wc_get_order($post_id);
-                $currency = $order->get_meta('_order_currency');
-                echo esc_html($currency);
-            }
-        }, 10, 2);
+        // Add an extra column for product currency
+        $columns['product_currency'] = __('Product Currency', 'tavtheme-free-multi-currency-for-woocommerce');
+        
+        echo '<th class="item-currency">' . $columns['product_currency'] . '</th>';
     }
 
     public function fix_admin_order_item_values($item, $item_id, $order) {
@@ -2475,7 +2490,7 @@ class TAV_Simple_Currency {
      */
     public function load_textdomain() {
         load_plugin_textdomain(
-            'tavtheme-simple-multi-currency-for-woocommerce',
+            'tavtheme-free-multi-currency-for-woocommerce',
             false,
             dirname(plugin_basename(TAV_SIMPLE_CURRENCY_FILE)) . '/languages'
         );
@@ -2586,7 +2601,7 @@ class TAV_Simple_Currency {
         // Only if there are items
         if (count($order->get_items()) > 0) {
             echo '<button type="button" class="button fix-order-item-totals">';
-            echo __('Fix Item Totals', 'tavtheme-simple-multi-currency-for-woocommerce');
+            echo __('Fix Item Totals', 'tavtheme-free-multi-currency-for-woocommerce');
             echo '</button>';
         }
     }

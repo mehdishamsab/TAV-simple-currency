@@ -1,4 +1,4 @@
-=== TavTheme free Multi Currency for WooCommerce ===
+=== TavTheme Free Multi Currency for WooCommerce ===
 Contributors: tavtheme
 Donate in PayPal: mehdishamsab@gmail.com  
 Tags: woocommerce, currency, multi-currency, exchange rate, ecommerce
